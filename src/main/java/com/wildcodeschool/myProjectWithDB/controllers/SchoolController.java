@@ -17,6 +17,12 @@ public class SchoolController {
     public List<School> getSchool(@RequestParam(defaultValue = "%") String country) {
         return SchoolRepository.selectByCountry(country);
     }
+
+    @DeleteMapping("/api/school/{id}")
+    public void delete(@PathVariable int id) {
+        SchoolRepository.delete(id);
+    }
+
     @PostMapping("/api/school")
     @ResponseStatus(HttpStatus.CREATED)
     public School store(
