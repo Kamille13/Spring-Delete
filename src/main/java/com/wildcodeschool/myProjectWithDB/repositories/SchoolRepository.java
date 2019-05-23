@@ -8,13 +8,39 @@ import com.wildcodeschool.myProjectWithDB.entities.School;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.wildcodeschool.myProjectWithDB.entities.School;
-
 public class SchoolRepository {
 
     private final static String DB_URL = "jdbc:mysql://localhost:3306/wild_db_quest?serverTimezone=GMT";
     private final static String DB_USER = "root";
     private final static String DB_PASSWORD = "Kaamiille13";
+
+    public static int update(
+            int id,
+            String name,
+            Integer capacity,
+            String country
+    ) {
+        try(
+                Connection connection = DriverManager.getConnection(
+                        DB_URL, DB_USER, DB_PASSWORD
+                );
+                PreparedStatement statement = connection.prepareStatement(
+                        "UPDATE school SET name=?, capacity=?, country=? WHERE id=?"
+                );
+        ) {
+            statement.setString(1,name);
+            statement.setInt(2, capacity);
+            statement.setString(3, country);
+            statement.setInt(4, id);
+
+            return statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "", e
+            );
+        }
+    }
 
     public static int insert(
             String name,
